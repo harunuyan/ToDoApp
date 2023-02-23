@@ -7,16 +7,15 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/row_backgrond"
-        android:background="@drawable/item_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/item_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5">
-
 
 
         <androidx.cardview.widget.CardView
@@ -32,15 +31,15 @@
 
         <TextView
             android:id="@+id/title_txt"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:maxLength="20"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#494949"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
+            android:maxLength="20"
+            android:text="Title"
+            android:textColor="#494949"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
