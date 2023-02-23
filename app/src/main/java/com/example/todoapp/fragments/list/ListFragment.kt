@@ -1,11 +1,10 @@
 package com.example.todoapp.fragments.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
+import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentListBinding
 
 class ListFragment : Fragment() {
@@ -23,6 +22,9 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set Menu
+        setHasOptionsMenu(true)
+
         binding.addNoteButton.setOnClickListener {
             val action = ListFragmentDirections.actionListFragmentToAddFragment()
             Navigation.findNavController(it).navigate(action)
@@ -31,6 +33,11 @@ class ListFragment : Fragment() {
             val action = ListFragmentDirections.actionListFragmentToUpdateFragment()
             Navigation.findNavController(it).navigate(action)
         }
+    }
+
+    // Set Menu
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.list_fragment_menu,menu)
     }
 
     override fun onDestroy() {
