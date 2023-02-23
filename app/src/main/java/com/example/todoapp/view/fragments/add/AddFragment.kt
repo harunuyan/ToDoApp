@@ -11,6 +11,7 @@ import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentAddBinding
 import com.example.todoapp.model.Priority
 import com.example.todoapp.model.ToDoData
+import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 
 class AddFragment : Fragment() {
@@ -18,6 +19,7 @@ class AddFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
+    private val mSharedViewModel: SharedViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -26,6 +28,13 @@ class AddFragment : Fragment() {
         setHasOptionsMenu(true)
         _binding = FragmentAddBinding.inflate(inflater, container, false)
         return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.prioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
+
 
     }
 
@@ -41,13 +50,13 @@ class AddFragment : Fragment() {
         val mDescription = binding.editNoteDescription.text.toString()
         val mPriority = binding.prioritiesSpinner.selectedItem.toString()
 
-        val validation = verifyDataFromUser(mTitle, mDescription)
+        val validation = mSharedViewModel.verifyDataFromUser(mTitle, mDescription)
         if (validation) {
             // Insert data to Database
             val newData = ToDoData(
                 0,
                 mTitle,
-                parsePriority(mPriority),
+                mSharedViewModel.parsePriority(mPriority),
                 mDescription
             )
             mToDoViewModel.insertData(newData)
@@ -59,26 +68,7 @@ class AddFragment : Fragment() {
         }
     }
 
-    private fun parsePriority(priority: String): Priority {
-        return when (priority) {
-            "High Priority" -> {
-                Priority.HIGH
-            }
-            "Medium Priority" -> {
-                Priority.MEDIUM
-            }
-            "Low Priority" -> {
-                Priority.LOW
-            }
-            else -> Priority.LOW
-        }
-    }
 
-    private fun verifyDataFromUser(title: String, description: String): Boolean {
-        return if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)) {
-            false
-        } else !(title.isEmpty() || description.isEmpty())
-    }
 
     // Set Menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
