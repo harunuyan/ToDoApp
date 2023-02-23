@@ -1,4 +1,4 @@
-package com.example.todoapp.fragments.list
+package com.example.todoapp.view.fragments.list
 
 import android.os.Bundle
 import android.view.*
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentListBinding
-
 class ListFragment : Fragment() {
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
@@ -37,7 +36,7 @@ class ListFragment : Fragment() {
 
     // Set Menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.list_fragment_menu,menu)
+        inflater.inflate(R.menu.list_fragment_menu, menu)
     }
 
     override fun onDestroy() {
