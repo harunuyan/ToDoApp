@@ -12,19 +12,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_sortBy"
+            android:checkable="false"
             android:title="Sort By">
             <menu>
                 <item
                     android:id="@+id/menu_priority_high"
-                    android:title="Priority High"/>
+                    android:title="Priority High" />
                 <item
                     android:id="@+id/menu_priority_low"
-                    android:title="Priority Low"/>
+                    android:title="Priority Low" />
             </menu>
         </item>
     </group>
     <item
         android:id="@+id/menu_delete_all"
         android:title="Delete all"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 </menu>

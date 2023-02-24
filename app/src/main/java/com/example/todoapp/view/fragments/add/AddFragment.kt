@@ -1,7 +1,6 @@
 package com.example.todoapp.view.fragments.add
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.*
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -9,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentAddBinding
-import com.example.todoapp.model.Priority
 import com.example.todoapp.model.ToDoData
 import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
@@ -17,7 +15,6 @@ import com.example.todoapp.viewmodel.ToDoViewModel
 class AddFragment : Fragment() {
     private var _binding: FragmentAddBinding? = null
     private val binding get() = _binding!!
-
     private val mToDoViewModel: ToDoViewModel by viewModels()
     private val mSharedViewModel: SharedViewModel by viewModels()
     override fun onCreateView(
@@ -34,8 +31,6 @@ class AddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.prioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
-
-
     }
 
     // Add
@@ -65,10 +60,10 @@ class AddFragment : Fragment() {
             // Navigate Back
             findNavController().navigate(R.id.action_addFragment_to_listFragment)
         } else {
-            Toast.makeText(requireContext(), "Please Fill Out All Fields.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please Fill Out All Fields.", Toast.LENGTH_SHORT)
+                .show()
         }
     }
-
 
 
     // Set Menu
