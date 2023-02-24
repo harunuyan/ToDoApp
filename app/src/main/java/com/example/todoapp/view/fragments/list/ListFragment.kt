@@ -6,17 +6,18 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todoapp.R
 import com.example.todoapp.adapter.ListAdapter
 import com.example.todoapp.databinding.FragmentListBinding
+import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 
 class ListFragment : Fragment() {
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
+    private val mSharedViewModel: SharedViewModel by viewModels()
 
     private val adapter: ListAdapter by lazy { ListAdapter() }
 
@@ -38,10 +39,14 @@ class ListFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer {
+        mToDoViewModel.getAllData.observe(viewLifecycleOwner) {
+            mSharedViewModel.checkIfDatabaseEmpty(it)
             adapter.setData(it)
 
-        })
+        }
+        mSharedViewModel.emptyDatabase.observe(viewLifecycleOwner) {
+            showEmptyDatabaseView(it)
+        }
 
         // Set Menu
         setHasOptionsMenu(true)
@@ -49,6 +54,20 @@ class ListFragment : Fragment() {
         binding.addNoteButton.setOnClickListener {
             val action = ListFragmentDirections.actionListFragmentToAddFragment()
             Navigation.findNavController(it).navigate(action)
+        }
+    }
+
+    private fun showEmptyDatabaseView(emptyDatabase: Boolean) {
+        if (emptyDatabase) {
+            with(binding) {
+                noDataImageView.visibility = View.VISIBLE
+                noDataTextView.visibility = View.VISIBLE
+            }
+        } else {
+            with(binding) {
+                noDataImageView.visibility = View.GONE
+                noDataTextView.visibility = View.GONE
+            }
         }
     }
 
