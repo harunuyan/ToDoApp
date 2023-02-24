@@ -48,10 +48,6 @@ class ListFragment : Fragment() {
             val action = ListFragmentDirections.actionListFragmentToAddFragment()
             Navigation.findNavController(it).navigate(action)
         }
-        binding.listLayout.setOnClickListener {
-            val action = ListFragmentDirections.actionListFragmentToUpdateFragment()
-            Navigation.findNavController(it).navigate(action)
-        }
     }
 
     // Set Menu

@@ -3,11 +3,14 @@ package com.example.todoapp.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.databinding.RowLayoutBinding
 import com.example.todoapp.model.Priority
 import com.example.todoapp.model.ToDoData
+import com.example.todoapp.view.fragments.list.ListFragmentDirections
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
@@ -48,8 +51,11 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
                 )
             )
         }
+        holder.binding.rowBackgrond.setOnClickListener {
+            val action = ListFragmentDirections.actionListFragmentToUpdateFragment(dataList[position])
+            Navigation.findNavController(it).navigate(action)
+        }
     }
-
     fun setData(toDoData: List<ToDoData>) {
         dataList.clear()
         dataList.addAll(toDoData)
