@@ -2,6 +2,8 @@ package com.example.todoapp.view.fragments.list
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -36,8 +38,8 @@ class ListFragment : Fragment() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
 
-        mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer { data ->
-            adapter.setData(data)
+        mToDoViewModel.getAllData.observe(viewLifecycleOwner, Observer {
+            adapter.setData(it)
 
         })
 
@@ -58,6 +60,32 @@ class ListFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_delete_all) {
+            confirmRemoval()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun confirmRemoval() {
+        val builder = AlertDialog.Builder(requireContext())
+        with(builder) {
+            setMessage("Are you sure you want to remove everything?")
+            setTitle("Delete Everything?")
+            setNegativeButton("Cancel") { _, _ -> }
+            setPositiveButton("Yes") { _, _ ->
+                // Remove item
+                mToDoViewModel.deleteAll()
+                Toast.makeText(
+                    requireContext(),
+                    "Removed Everything!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            create().show()
+        }
     }
 
 }
