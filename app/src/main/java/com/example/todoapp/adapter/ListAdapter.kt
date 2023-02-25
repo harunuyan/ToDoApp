@@ -14,7 +14,7 @@ import com.example.todoapp.view.fragments.list.ListFragmentDirections
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
-    private val dataList = ArrayList<ToDoData>()
+    val dataList = ArrayList<ToDoData>()
 
     inner class ViewHolder(val binding: RowLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
