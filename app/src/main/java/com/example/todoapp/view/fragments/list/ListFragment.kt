@@ -18,9 +18,7 @@ import com.example.todoapp.view.fragments.list.adapter.ListAdapter
 import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 import com.google.android.material.snackbar.Snackbar
-import jp.wasabeef.recyclerview.animators.LandingAnimator
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -66,14 +64,14 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         // Recycler View Animation
         recyclerView.itemAnimator = SlideInDownAnimator().apply {
-            addDuration = 300
+            addDuration = 100
         }
 
         // Swipe to delete
         swipeToDelete(recyclerView)
     }
 
-    private fun restoreDeletedData(view: View, deletedItem: ToDoData, position: Int) {
+    private fun restoreDeletedData(view: View, deletedItem: ToDoData) {
         val snackBar = Snackbar.make(
             view,
             "Deleted '${deletedItem.title}'",
@@ -81,7 +79,6 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         )
         snackBar.setAction("Undo") {
             mToDoViewModel.insertData(deletedItem)
-            adapter.notifyItemChanged(position)
         }
         snackBar.show()
     }
@@ -94,7 +91,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
                 mToDoViewModel.deleteItem(deletedItem)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
                 // Restore deleted item
-                restoreDeletedData(viewHolder.itemView, deletedItem, viewHolder.adapterPosition)
+                restoreDeletedData(viewHolder.itemView, deletedItem)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
