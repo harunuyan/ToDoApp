@@ -2,6 +2,7 @@ package com.example.todoapp.view.fragments.list
 
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -18,9 +19,8 @@ import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private val mToDoViewModel: ToDoViewModel by viewModels()
     private val mSharedViewModel: SharedViewModel by viewModels()
@@ -116,6 +116,12 @@ class ListFragment : Fragment() {
     // Set Menu
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.list_fragment_menu, menu)
+
+        // Search
+        val search = menu.findItem(R.id.menu_search)
+        val searchView = search.actionView as? SearchView
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.setOnQueryTextListener(this)
     }
 
     override fun onDestroy() {
@@ -128,6 +134,29 @@ class ListFragment : Fragment() {
             confirmRemoval()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchThroughtDatabase(query)
+        }
+        return true
+    }
+
+    override fun onQueryTextChange(query: String?): Boolean {
+        if (query != null) {
+            searchThroughtDatabase(query)
+        }
+        return true
+    }
+
+    private fun searchThroughtDatabase(query: String) {
+        var searchQuery = "%$query%"
+        mToDoViewModel.searchQuery(searchQuery).observe(this) {
+            it?.let {
+                adapter.setData(it)
+            }
+        }
     }
 
     private fun confirmRemoval() {
@@ -148,5 +177,4 @@ class ListFragment : Fragment() {
             create().show()
         }
     }
-
 }
