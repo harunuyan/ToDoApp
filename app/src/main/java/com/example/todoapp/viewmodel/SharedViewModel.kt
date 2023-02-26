@@ -13,7 +13,7 @@ import com.example.todoapp.model.Priority
 import com.example.todoapp.model.ToDoData
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
-    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(true)
+    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(false)
 
     val listener: AdapterView.OnItemSelectedListener = object :
         AdapterView.OnItemSelectedListener {

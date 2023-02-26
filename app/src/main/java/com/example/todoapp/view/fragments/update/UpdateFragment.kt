@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
-import com.example.todoapp.adapter.ListAdapter
+import com.example.todoapp.view.fragments.list.adapter.ListAdapter
 import com.example.todoapp.databinding.FragmentUpdateBinding
 import com.example.todoapp.model.ToDoData
 import com.example.todoapp.view.fragments.list.ListFragmentDirections

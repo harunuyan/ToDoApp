@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
-import com.example.todoapp.adapter.ListAdapter
 import com.example.todoapp.databinding.FragmentListBinding
 import com.example.todoapp.model.ToDoData
+import com.example.todoapp.view.fragments.list.adapter.ListAdapter
 import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 import com.google.android.material.snackbar.Snackbar
+import jp.wasabeef.recyclerview.animators.LandingAnimator
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 
 class ListFragment : Fragment() {
 
@@ -59,7 +61,13 @@ class ListFragment : Fragment() {
         val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        // Recycler View Animation
+        recyclerView.itemAnimator = LandingAnimator().apply {
+            addDuration = 300
+        }
 
+
+        // Swipe to delete
         swipeToDelete(recyclerView)
     }
 
@@ -84,7 +92,7 @@ class ListFragment : Fragment() {
                 mToDoViewModel.deleteItem(deletedItem)
                 adapter.notifyItemRemoved(viewHolder.adapterPosition)
                 // Restore deleted item
-                restoreDeletedData(viewHolder.itemView,deletedItem,viewHolder.adapterPosition)
+                restoreDeletedData(viewHolder.itemView, deletedItem, viewHolder.adapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)

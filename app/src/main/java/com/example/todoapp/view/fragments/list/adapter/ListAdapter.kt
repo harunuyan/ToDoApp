@@ -1,10 +1,11 @@
-package com.example.todoapp.adapter
+package com.example.todoapp.view.fragments.list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
 import com.example.todoapp.databinding.RowLayoutBinding
@@ -14,7 +15,7 @@ import com.example.todoapp.view.fragments.list.ListFragmentDirections
 
 class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
 
-    val dataList = ArrayList<ToDoData>()
+    var dataList = emptyList<ToDoData>()
 
     inner class ViewHolder(val binding: RowLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -57,8 +58,9 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
         }
     }
     fun setData(toDoData: List<ToDoData>) {
-        dataList.clear()
-        dataList.addAll(toDoData)
-        notifyDataSetChanged()
+        val diffUtil = ToDoDiffUtil(dataList,toDoData)
+        val toDoDiffResult = DiffUtil.calculateDiff(diffUtil)
+        dataList = toDoData
+        toDoDiffResult.dispatchUpdatesTo(this)
     }
 }
