@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentListBinding
 import com.example.todoapp.model.ToDoData
+import com.example.todoapp.utils.hideKeyboard
 import com.example.todoapp.view.fragments.list.adapter.ListAdapter
 import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
@@ -50,6 +51,9 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
         // Set Menu
         setHasOptionsMenu(true)
+
+        // Hide Soft Keyboard
+        hideKeyboard(requireActivity())
 
         binding.addNoteButton.setOnClickListener {
             val action = ListFragmentDirections.actionListFragmentToAddFragment()
