@@ -1,7 +1,6 @@
 package com.example.todoapp.viewmodel
 
 import android.app.Application
-import android.text.TextUtils
 import android.view.View
 import android.widget.AdapterView
 import android.widget.TextView
@@ -54,7 +53,6 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         override fun onNothingSelected(parent: AdapterView<*>?) {
             TODO("Not yet implemented")
         }
-
     }
 
     fun parsePriority(priority: String): Priority {
@@ -71,6 +69,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             else -> Priority.LOW
         }
     }
+
     fun parsePriorityToInt(priority: Priority): Int {
         return when (priority) {
             Priority.HIGH -> 0
@@ -80,9 +79,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun verifyDataFromUser(title: String, description: String): Boolean {
-        return if (TextUtils.isEmpty(title) || TextUtils.isEmpty(description)) {
-            false
-        } else !(title.isEmpty() || description.isEmpty())
+        return !(title.isEmpty() || description.isEmpty())
     }
 
     fun checkIfDatabaseEmpty(toDoData: List<ToDoData>) {

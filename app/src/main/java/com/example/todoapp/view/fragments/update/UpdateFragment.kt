@@ -4,15 +4,16 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todoapp.R
-import com.example.todoapp.view.fragments.list.adapter.ListAdapter
 import com.example.todoapp.databinding.FragmentUpdateBinding
 import com.example.todoapp.model.ToDoData
-import com.example.todoapp.view.fragments.list.ListFragmentDirections
 import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 
@@ -21,19 +22,34 @@ class UpdateFragment : Fragment() {
     private val mSharedViewModel: SharedViewModel by viewModels()
     private val mToDoViewModel: ToDoViewModel by viewModels()
     private var _binding: FragmentUpdateBinding? = null
-    private val adapter = ListAdapter()
     private val binding get() = _binding!!
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        setHasOptionsMenu(true)
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val menuhost: MenuHost = requireActivity()
+        menuhost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.update_fragment_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_Save -> updateItem()
+                    R.id.menu_delete -> confirmItemRemoval()
+                    android.R.id.home -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+                return true
+            }
+
+        },viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         with(binding) {
             currentPrioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
@@ -42,15 +58,6 @@ class UpdateFragment : Fragment() {
             currentPrioritiesSpinner.setSelection(mSharedViewModel.parsePriorityToInt(args.currentItem.priority))
         }
 
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_Save -> updateItem()
-            R.id.menu_delete -> confirmItemRemoval()
-        }
-        return super.onOptionsItemSelected(item)
-        ListFragmentDirections
     }
 
     private fun confirmItemRemoval() {
@@ -97,11 +104,6 @@ class UpdateFragment : Fragment() {
                 .show()
 
         }
-    }
-
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.update_fragment_menu, menu)
     }
 
     override fun onDestroy() {

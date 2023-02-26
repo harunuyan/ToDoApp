@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#EDEDED"
     android:padding="24dp"
     tools:context=".view.fragments.update.UpdateFragment">
 
     <EditText
         android:id="@+id/current_note_title"
         android:layout_width="0dp"
-        android:paddingStart="24dp"
         android:layout_height="60dp"
         android:background="@drawable/custom_input"
-        android:hint="Title"
+        android:paddingStart="24dp"
+        android:text="@string/new_title"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <Spinner
         android:id="@+id/current_priorities_spinner"
         android:layout_width="0dp"
-        android:entries="@array/priorities"
         android:layout_height="60dp"
-        android:paddingStart="17dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/custom_input"
+        android:entries="@array/priorities"
+        android:paddingStart="17dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/current_note_title" />
+        app:layout_constraintTop_toBottomOf="@+id/current_note_title"
+        tools:ignore="RtlSymmetry" />
 
     <EditText
         android:id="@+id/current_note_description"
@@ -41,11 +46,13 @@
         android:background="@drawable/custom_input"
         android:ems="10"
         android:gravity="top|start"
-        android:paddingEnd="24dp"
-        android:hint="Description"
         android:inputType="textMultiLine"
         android:paddingStart="24dp"
         android:paddingTop="16dp"
+        android:paddingEnd="24dp"
+        android:text="@string/new_description"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

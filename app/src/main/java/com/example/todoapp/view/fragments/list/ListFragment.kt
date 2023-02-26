@@ -5,8 +5,11 @@ import android.view.*
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -15,11 +18,11 @@ import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentListBinding
 import com.example.todoapp.model.ToDoData
 import com.example.todoapp.utils.hideKeyboard
+import com.example.todoapp.utils.observeOnce
 import com.example.todoapp.view.fragments.list.adapter.ListAdapter
 import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 import com.google.android.material.snackbar.Snackbar
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -44,13 +47,43 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         mToDoViewModel.getAllData.observe(viewLifecycleOwner) {
             mSharedViewModel.checkIfDatabaseEmpty(it)
             adapter.setData(it)
+            binding.recyclerView.scheduleLayoutAnimation()
         }
         mSharedViewModel.emptyDatabase.observe(viewLifecycleOwner) {
             showEmptyDatabaseView(it)
         }
 
-        // Set Menu
-        setHasOptionsMenu(true)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.list_fragment_menu, menu)
+
+                // Search
+                val search = menu.findItem(R.id.menu_search)
+                val searchView = search.actionView as? SearchView
+                searchView?.isSubmitButtonEnabled = true
+                searchView?.setOnQueryTextListener(this@ListFragment)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.menu_delete_all -> confirmRemoval()
+                    R.id.menu_priority_high -> mToDoViewModel.sortByHighPriority.observe(
+                        viewLifecycleOwner
+                    ) {
+                        adapter.setData(it)
+                    }
+                    R.id.menu_priority_low -> mToDoViewModel.sortByLowPriority.observe(
+                        viewLifecycleOwner
+                    ) {
+                        adapter.setData(it)
+                    }
+                    android.R.id.home -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+                return true
+            }
+
+        },viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         // Hide Soft Keyboard
         hideKeyboard(requireActivity())
@@ -66,11 +99,6 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         recyclerView.adapter = adapter
         recyclerView.layoutManager =
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        // Recycler View Animation
-        recyclerView.itemAnimator = SlideInDownAnimator().apply {
-            addDuration = 100
-        }
-
         // Swipe to delete
         swipeToDelete(recyclerView)
     }
@@ -116,33 +144,9 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         }
     }
 
-    // Set Menu
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.list_fragment_menu, menu)
-
-        // Search
-        val search = menu.findItem(R.id.menu_search)
-        val searchView = search.actionView as? SearchView
-        searchView?.isSubmitButtonEnabled = true
-        searchView?.setOnQueryTextListener(this)
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_delete_all -> confirmRemoval()
-            R.id.menu_priority_high -> mToDoViewModel.sortByHighPriority.observe(this) {
-                adapter.setData(it)
-            }
-            R.id.menu_priority_low -> mToDoViewModel.sortByLowPriority.observe(this) {
-                adapter.setData(it)
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -160,8 +164,8 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun searchThroughtDatabase(query: String) {
-        var searchQuery = "%$query%"
-        mToDoViewModel.searchQuery(searchQuery).observe(this) {
+        val searchQuery = "%$query%"
+        mToDoViewModel.searchQuery(searchQuery).observeOnce(viewLifecycleOwner) {
             it?.let {
                 adapter.setData(it)
             }

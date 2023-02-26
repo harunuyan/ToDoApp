@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todoapp.R
@@ -53,12 +52,14 @@ class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
             )
         }
         holder.binding.rowBackgrond.setOnClickListener {
-            val action = ListFragmentDirections.actionListFragmentToUpdateFragment(dataList[position])
+            val action =
+                ListFragmentDirections.actionListFragmentToUpdateFragment(dataList[position])
             Navigation.findNavController(it).navigate(action)
         }
     }
+
     fun setData(toDoData: List<ToDoData>) {
-        val diffUtil = ToDoDiffUtil(dataList,toDoData)
+        val diffUtil = ToDoDiffUtil(dataList, toDoData)
         val toDoDiffResult = DiffUtil.calculateDiff(diffUtil)
         dataList = toDoData
         toDoDiffResult.dispatchUpdatesTo(this)
