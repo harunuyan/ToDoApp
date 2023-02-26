@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.todoapp.R
 import com.example.todoapp.databinding.FragmentListBinding
 import com.example.todoapp.model.ToDoData
@@ -19,6 +19,8 @@ import com.example.todoapp.viewmodel.SharedViewModel
 import com.example.todoapp.viewmodel.ToDoViewModel
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.recyclerview.animators.LandingAnimator
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -60,12 +62,12 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     fun setupRecyclerView() {
         val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager =
+            StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         // Recycler View Animation
-        recyclerView.itemAnimator = LandingAnimator().apply {
+        recyclerView.itemAnimator = SlideInDownAnimator().apply {
             addDuration = 300
         }
-
 
         // Swipe to delete
         swipeToDelete(recyclerView)
